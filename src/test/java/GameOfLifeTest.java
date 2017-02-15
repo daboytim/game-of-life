@@ -32,7 +32,13 @@ public class GameOfLifeTest {
 
     @Test
     public void shouldAdvanceUsingRuleOne() throws Exception {
-        underTest.advance();
+        underTest.ruleOne();
         assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.1")));
+    }
+
+    @Test
+    public void shouldAdvanceUsingRuleTwo() throws Exception {
+        underTest.ruleTwo();
+        assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.2")));
     }
 }

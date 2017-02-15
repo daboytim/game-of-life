@@ -87,7 +87,7 @@ public class GameOfLife {
         ruleOne();
     }
 
-    private void ruleOne() {
+    public void ruleOne() {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if (universe[i][j] && countLiveNeighbors(i, j) < 2) {
