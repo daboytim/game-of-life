@@ -8,13 +8,21 @@ import java.io.InputStreamReader;
  */
 public class GameOfLife {
     private boolean ready;
-    private boolean[][] universe;
+    private boolean[][] universe, nextState;
     private int width, height;
+
+    private GameOfLife(boolean[][] state, int height, int width) {
+        this.universe = state;
+        this.height = height;
+        this.width = width;
+        ready = true;
+    }
 
     public GameOfLife(String file) {
         width = 8;
         height = 6;
         universe = new boolean[height][width];
+        nextState = new boolean[height][width];
         try {
             ready = init(file);
         } catch (IOException e) {
@@ -75,8 +83,101 @@ public class GameOfLife {
         System.out.println();
     }
 
+    public void advance() {
+        ruleOne();
+    }
+
+    private void ruleOne() {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (universe[i][j] && countLiveNeighbors(i, j) < 2) {
+                    nextState[i][j] = false;
+                } else if (universe[i][j]) {
+                    nextState[i][j] = true;
+                }
+            }
+        }
+    }
+
+    private int countLiveNeighbors(int x, int y) {
+        int liveNeighbors = 0;
+        if (x == 0 && y == 0) {
+            liveNeighbors += universe[x][y+1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y+1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y] ? 1 : 0;
+        } else if (x == 0 && y == width-1) {
+            liveNeighbors += universe[x][y-1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y-1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y] ? 1 : 0;
+        } else if (x == height-1 && y == 0) {
+            liveNeighbors += universe[x][y+1] ? 1 : 0;
+            liveNeighbors += universe[x-1][y+1] ? 1 : 0;
+            liveNeighbors += universe[x-1][y] ? 1 : 0;
+        } else if (x == height-1 && y == width-1) {
+            liveNeighbors += universe[x][y-1] ? 1 : 0;
+            liveNeighbors += universe[x-1][y-1] ? 1 : 0;
+            liveNeighbors += universe[x-1][y] ? 1 : 0;
+        } else if (x == 0) {
+            liveNeighbors += universe[x][y-1] ? 1 : 0;
+            liveNeighbors += universe[x][y+1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y-1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y] ? 1 : 0;
+            liveNeighbors += universe[x+1][y+1] ? 1 : 0;
+        } else if (y == 0) {
+            liveNeighbors += universe[x-1][y] ? 1 : 0;
+            liveNeighbors += universe[x+1][y] ? 1 : 0;
+            liveNeighbors += universe[x-1][y+1] ? 1 : 0;
+            liveNeighbors += universe[x][y+1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y+1] ? 1 : 0;
+        } else if (x == height-1) {
+            liveNeighbors += universe[x][y-1] ? 1 : 0;
+            liveNeighbors += universe[x][y+1] ? 1 : 0;
+            liveNeighbors += universe[x-1][y-1] ? 1 : 0;
+            liveNeighbors += universe[x-1][y] ? 1 : 0;
+            liveNeighbors += universe[x-1][y+1] ? 1 : 0;
+        } else if (y == width-1) {
+            liveNeighbors += universe[x-1][y] ? 1 : 0;
+            liveNeighbors += universe[x+1][y] ? 1 : 0;
+            liveNeighbors += universe[x-1][y-1] ? 1 : 0;
+            liveNeighbors += universe[x][y-1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y-1] ? 1 : 0;
+        } else {
+            liveNeighbors += universe[x-1][y-1] ? 1 : 0;
+            liveNeighbors += universe[x-1][y] ? 1 : 0;
+            liveNeighbors += universe[x-1][y+1] ? 1 : 0;
+            liveNeighbors += universe[x][y-1] ? 1 : 0;
+            liveNeighbors += universe[x][y+1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y-1] ? 1 : 0;
+            liveNeighbors += universe[x+1][y] ? 1 : 0;
+            liveNeighbors += universe[x+1][y+1] ? 1 : 0;
+        }
+        return liveNeighbors;
+    }
+
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof GameOfLife)) return false;
+        final GameOfLife other = (GameOfLife) o;
+        if (!other.canEqual((Object) this)) return false;
+        if (this.isReady() != other.isReady()) return false;
+        if (!java.util.Arrays.deepEquals(this.universe, other.universe)) return false;
+        if (this.width != other.width) return false;
+        if (this.height != other.height) return false;
+        return true;
+    }
+
+    protected boolean canEqual(Object other) {
+        return other instanceof GameOfLife;
+    }
+
+    public GameOfLife getTrasitionalState() {
+        return new GameOfLife(nextState, height, width);
+    }
+
     public static void main(String[] args) {
-        new GameOfLife("packedUniverse").print();
-        new GameOfLife("testUniverse").print();
+        GameOfLife gol = new GameOfLife("testUniverse");
+        gol.print();
+        gol.advance();
+        gol.getTrasitionalState().print();
     }
 }
