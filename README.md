@@ -63,3 +63,4 @@ A few initial states, each of size 6x8 (HxW), exist in the resources directory:
     0 0 0 1 1 0 0 0 
     
     Continue advancing the state?[Y/n] n
+
