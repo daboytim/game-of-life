@@ -24,7 +24,7 @@ public class GameOfLife {
     }
 
     private boolean init(String file) throws IOException {
-        InputStream stream = ClassLoader.getSystemResourceAsStream(file);
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(file);
         BufferedReader buffer = new BufferedReader(new InputStreamReader(stream));
         String currentLine;
         String[] states;
@@ -65,7 +65,18 @@ public class GameOfLife {
         return universe[x][y];
     }
 
-    public static void main(String[] args) {
+    public void print() {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                System.out.print( (universe[i][j] ? '1' : '0') + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 
+    public static void main(String[] args) {
+        new GameOfLife("packedUniverse").print();
+        new GameOfLife("testUniverse").print();
     }
 }
