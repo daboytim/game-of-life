@@ -12,7 +12,7 @@ public class GameOfLifeTest {
 
     @Before
     public void setup() {
-        underTest = new GameOfLife("packedUniverse");
+        underTest = new GameOfLife("testUniverse");
     }
 
     @Test
@@ -22,10 +22,17 @@ public class GameOfLifeTest {
 
     @Test
     public void shouldInitializeUniverseFromFile() throws Exception {
+        underTest = new GameOfLife("packedUniverse");
         for (int i = 0; i < underTest.height(); i++){
             for (int j = 0; j < underTest.width(); j++) {
                 assertThat(underTest.get(i, j), equalTo(true));
             }
         }
+    }
+
+    @Test
+    public void shouldAdvanceUsingRuleOne() throws Exception {
+        underTest.advance();
+        assertThat(underTest, equalTo(new GameOfLife("testUniverseAfterRule1")))
     }
 }
