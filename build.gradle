@@ -6,7 +6,8 @@ version = '0.0.1'
 jar {
     manifest {
         attributes 'Implementation-Title': 'Conways Game Of Life',
-                'Implementation-Version': version
+                'Implementation-Version': version,
+                'Main-Class': 'GameOfLife'
     }
 }
 

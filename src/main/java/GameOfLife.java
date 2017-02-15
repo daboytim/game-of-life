@@ -10,6 +10,7 @@ public class GameOfLife {
     private boolean ready;
     private boolean[][] universe, nextState;
     private int width, height;
+    private String delim;
 
     private GameOfLife(boolean[][] state, int height, int width) {
         this.universe = state;
@@ -18,9 +19,24 @@ public class GameOfLife {
         ready = true;
     }
 
-    public GameOfLife(String file) {
-        width = 8;
-        height = 6;
+    public GameOfLife(int height, int width, String file) {
+        this.height = height;
+        this.width = width;
+        delim = ",";
+        universe = new boolean[height][width];
+        nextState = new boolean[height][width];
+        try {
+            ready = init(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public GameOfLife(int height, int width, String file, String delim) {
+        this.height = height;
+        this.width = width;
+        this.delim = delim;
         universe = new boolean[height][width];
         nextState = new boolean[height][width];
         try {
@@ -41,9 +57,9 @@ public class GameOfLife {
             if (numLines > height) {
                 break;
             }
-            states = currentLine.split(",");
+            states = currentLine.split(delim);
             if (states.length != width) {
-                throw new IllegalArgumentException("Expected universe width of 8; got " + states.length);
+                throw new IllegalArgumentException(String.format("Expected universe width of %d; got %d", width, states.length));
             }
             for (int i = 0; i < width; i++) {
                 universe[numLines][i] = !states[i].equals("0");
@@ -51,7 +67,7 @@ public class GameOfLife {
             numLines++;
         }
         if (numLines != height) {
-            throw new IllegalArgumentException("Expected universe height of 6; got " + numLines);
+            throw new IllegalArgumentException(String.format("Expected universe height of %d; got %d", height, numLines));
         }
 
         return true;
@@ -210,9 +226,59 @@ public class GameOfLife {
     }
 
     public static void main(String[] args) {
-        GameOfLife gol = new GameOfLife("testUniverse");
-        gol.print();
-        gol.advance();
-        gol.print();
+        if (args.length <= 3 || args.length > 4) {
+            usage();
+        }
+        int height = Integer.parseInt(args[0]);
+        int width = Integer.parseInt(args[1]);
+        String file = args[2];
+        String delim = null;
+        if (args.length > 3) {
+            delim = args[3];
+        }
+
+        GameOfLife gameOfLifel;
+        if (delim == null) {
+            gameOfLifel = new GameOfLife(height, width, file);
+        } else {
+            gameOfLifel = new GameOfLife(height, width, file, delim);
+        }
+
+        System.out.println("Universe initialized:");
+        gameOfLifel.print();
+
+        do {
+            System.out.print("Advancing to next state...");
+            gameOfLifel.advance();
+            System.out.println("done");
+            gameOfLifel.print();
+        } while (ask());
+
+        System.exit(0);
+    }
+
+    public static boolean ask() {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("Continue advancing the state?[Y/n] ");
+        String ans = null;
+        try {
+            ans = reader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (ans.equals("") || ans.equalsIgnoreCase("y")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void usage() {
+        System.out.println("Conway's Game Of Life!");
+        System.out.println();
+        System.out.println("usage: <height> <width> <file> [delimiter]");
+        System.out.println("    height    - the number of rows in your universe");
+        System.out.println("    width     - the number of columns in your universe");
+        System.out.println("    file      - the initial state of your universe");
+        System.out.println("    delimiter - an optional pattern which separates cells in the universe (default: ',')");
     }
 }
