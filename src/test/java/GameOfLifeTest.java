@@ -65,4 +65,10 @@ public class GameOfLifeTest {
         underTest.ruleThree();
         assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.3")));
     }
+
+    @Test
+    public void shouldAdvanceUsingRuleFour() throws Exception {
+        underTest.ruleFour();
+        assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.4")));
+    }
 }
