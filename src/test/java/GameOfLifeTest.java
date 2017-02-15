@@ -31,6 +31,24 @@ public class GameOfLifeTest {
     }
 
     @Test
+    public void shouldCountLiveNeighbors() throws Exception {
+        int y = underTest.height()-1;
+        int x = underTest.width()-1;
+        //corners
+        assertThat(underTest.countLiveNeighbors(0, 0), equalTo(2));
+        assertThat(underTest.countLiveNeighbors(0, x), equalTo(2));
+        assertThat(underTest.countLiveNeighbors(y, 0), equalTo(0));
+        assertThat(underTest.countLiveNeighbors(y, x), equalTo(0));
+        //middle of edges
+        assertThat(underTest.countLiveNeighbors(0, x/2), equalTo(1));
+        assertThat(underTest.countLiveNeighbors(y, x/2), equalTo(3));
+        assertThat(underTest.countLiveNeighbors(y/2, 0), equalTo(2));
+        assertThat(underTest.countLiveNeighbors(y/2, x), equalTo(2));
+        //middle of universe
+        assertThat(underTest.countLiveNeighbors(y/2, x/2), equalTo(1));
+    }
+
+    @Test
     public void shouldAdvanceUsingRuleOne() throws Exception {
         underTest.ruleOne();
         assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.1")));

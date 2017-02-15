@@ -69,8 +69,8 @@ public class GameOfLife {
         return height;
     }
 
-    public boolean get(int x, int y) {
-        return universe[x][y];
+    public boolean get(int y, int x) {
+        return universe[y][x];
     }
 
     public void print() {
@@ -111,57 +111,57 @@ public class GameOfLife {
         }
     }
 
-    public int countLiveNeighbors(int x, int y) {
+    public int countLiveNeighbors(int y, int x) {
         int liveNeighbors = 0;
-        if (x == 0 && y == 0) {
-            liveNeighbors += universe[x][y+1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y+1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y] ? 1 : 0;
-        } else if (x == 0 && y == width-1) {
-            liveNeighbors += universe[x][y-1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y-1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y] ? 1 : 0;
-        } else if (x == height-1 && y == 0) {
-            liveNeighbors += universe[x][y+1] ? 1 : 0;
-            liveNeighbors += universe[x-1][y+1] ? 1 : 0;
-            liveNeighbors += universe[x-1][y] ? 1 : 0;
-        } else if (x == height-1 && y == width-1) {
-            liveNeighbors += universe[x][y-1] ? 1 : 0;
-            liveNeighbors += universe[x-1][y-1] ? 1 : 0;
-            liveNeighbors += universe[x-1][y] ? 1 : 0;
-        } else if (x == 0) {
-            liveNeighbors += universe[x][y-1] ? 1 : 0;
-            liveNeighbors += universe[x][y+1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y-1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y] ? 1 : 0;
-            liveNeighbors += universe[x+1][y+1] ? 1 : 0;
+        if (y == 0 && x == 0) {
+            liveNeighbors += universe[y][x+1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x+1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x] ? 1 : 0;
+        } else if (y == 0 && x == width-1) {
+            liveNeighbors += universe[y][x-1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x-1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x] ? 1 : 0;
+        } else if (y == height-1 && x == 0) {
+            liveNeighbors += universe[y][x+1] ? 1 : 0;
+            liveNeighbors += universe[y-1][x+1] ? 1 : 0;
+            liveNeighbors += universe[y-1][x] ? 1 : 0;
+        } else if (y == height-1 && x == width-1) {
+            liveNeighbors += universe[y][x-1] ? 1 : 0;
+            liveNeighbors += universe[y-1][x-1] ? 1 : 0;
+            liveNeighbors += universe[y-1][x] ? 1 : 0;
         } else if (y == 0) {
-            liveNeighbors += universe[x-1][y] ? 1 : 0;
-            liveNeighbors += universe[x+1][y] ? 1 : 0;
-            liveNeighbors += universe[x-1][y+1] ? 1 : 0;
-            liveNeighbors += universe[x][y+1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y+1] ? 1 : 0;
-        } else if (x == height-1) {
-            liveNeighbors += universe[x][y-1] ? 1 : 0;
-            liveNeighbors += universe[x][y+1] ? 1 : 0;
-            liveNeighbors += universe[x-1][y-1] ? 1 : 0;
-            liveNeighbors += universe[x-1][y] ? 1 : 0;
-            liveNeighbors += universe[x-1][y+1] ? 1 : 0;
-        } else if (y == width-1) {
-            liveNeighbors += universe[x-1][y] ? 1 : 0;
-            liveNeighbors += universe[x+1][y] ? 1 : 0;
-            liveNeighbors += universe[x-1][y-1] ? 1 : 0;
-            liveNeighbors += universe[x][y-1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y-1] ? 1 : 0;
+            liveNeighbors += universe[y][x-1] ? 1 : 0;
+            liveNeighbors += universe[y][x+1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x-1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x] ? 1 : 0;
+            liveNeighbors += universe[y+1][x+1] ? 1 : 0;
+        } else if (x == 0) {
+            liveNeighbors += universe[y-1][x] ? 1 : 0;
+            liveNeighbors += universe[y+1][x] ? 1 : 0;
+            liveNeighbors += universe[y-1][x+1] ? 1 : 0;
+            liveNeighbors += universe[y][x+1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x+1] ? 1 : 0;
+        } else if (y == height-1) {
+            liveNeighbors += universe[y][x-1] ? 1 : 0;
+            liveNeighbors += universe[y][x+1] ? 1 : 0;
+            liveNeighbors += universe[y-1][x-1] ? 1 : 0;
+            liveNeighbors += universe[y-1][x] ? 1 : 0;
+            liveNeighbors += universe[y-1][x+1] ? 1 : 0;
+        } else if (x == width-1) {
+            liveNeighbors += universe[y-1][x] ? 1 : 0;
+            liveNeighbors += universe[y+1][x] ? 1 : 0;
+            liveNeighbors += universe[y-1][x-1] ? 1 : 0;
+            liveNeighbors += universe[y][x-1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x-1] ? 1 : 0;
         } else {
-            liveNeighbors += universe[x-1][y-1] ? 1 : 0;
-            liveNeighbors += universe[x-1][y] ? 1 : 0;
-            liveNeighbors += universe[x-1][y+1] ? 1 : 0;
-            liveNeighbors += universe[x][y-1] ? 1 : 0;
-            liveNeighbors += universe[x][y+1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y-1] ? 1 : 0;
-            liveNeighbors += universe[x+1][y] ? 1 : 0;
-            liveNeighbors += universe[x+1][y+1] ? 1 : 0;
+            liveNeighbors += universe[y-1][x-1] ? 1 : 0;
+            liveNeighbors += universe[y-1][x] ? 1 : 0;
+            liveNeighbors += universe[y-1][x+1] ? 1 : 0;
+            liveNeighbors += universe[y][x-1] ? 1 : 0;
+            liveNeighbors += universe[y][x+1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x-1] ? 1 : 0;
+            liveNeighbors += universe[y+1][x] ? 1 : 0;
+            liveNeighbors += universe[y+1][x+1] ? 1 : 0;
         }
         return liveNeighbors;
     }
