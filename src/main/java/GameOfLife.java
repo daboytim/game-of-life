@@ -1,11 +1,11 @@
 /**
  * Created by derek on 2/14/17.
  */
-public class GameOfLIfe {
+public class GameOfLife {
     private boolean ready;
     private boolean[][] universe;
 
-    public GameOfLIfe() {
+    public GameOfLife() {
         ready = init();
     }
 
