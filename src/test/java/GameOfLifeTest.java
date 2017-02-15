@@ -51,24 +51,30 @@ public class GameOfLifeTest {
     @Test
     public void shouldAdvanceUsingRuleOne() throws Exception {
         underTest.ruleOne();
-        assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.1")));
+        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife("testUniverse.1")));
     }
 
     @Test
     public void shouldAdvanceUsingRuleTwo() throws Exception {
         underTest.ruleTwo();
-        assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.2")));
+        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife("testUniverse.2")));
     }
 
     @Test
     public void shouldAdvanceUsingRuleThree() throws Exception {
         underTest.ruleThree();
-        assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.3")));
+        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife("testUniverse.3")));
     }
 
     @Test
     public void shouldAdvanceUsingRuleFour() throws Exception {
         underTest.ruleFour();
-        assertThat(underTest.getTrasitionalState(), equalTo(new GameOfLife("testUniverse.4")));
+        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife("testUniverse.4")));
+    }
+
+    @Test
+    public void shouldAdvanceUsingAllRules() throws Exception {
+        underTest.advance();
+        assertThat(underTest, equalTo(new GameOfLife("testUniverseNextState")));
     }
 }

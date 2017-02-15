@@ -85,6 +85,11 @@ public class GameOfLife {
 
     public void advance() {
         ruleOne();
+        ruleTwo();
+        ruleThree();
+        ruleFour();
+        universe = nextState;
+        nextState = new boolean[height][width];
     }
 
     public void ruleOne() {
@@ -92,8 +97,6 @@ public class GameOfLife {
             for (int j = 0; j < width; j++) {
                 if (universe[i][j] && countLiveNeighbors(i, j) < 2) {
                     nextState[i][j] = false;
-                } else if (universe[i][j]) {
-                    nextState[i][j] = true;
                 }
             }
         }
@@ -104,8 +107,6 @@ public class GameOfLife {
             for (int j = 0; j < width; j++) {
                 if (universe[i][j] && countLiveNeighbors(i, j) > 3) {
                     nextState[i][j] = false;
-                } else if (universe[i][j]) {
-                    nextState[i][j] = true;
                 }
             }
         }
@@ -117,6 +118,16 @@ public class GameOfLife {
             for (int j = 0; j < width; j++) {
                 numNeighbors = countLiveNeighbors(i, j);
                 if (universe[i][j] && ( numNeighbors == 2 || numNeighbors == 3 ) ) {
+                    nextState[i][j] = true;
+                }
+            }
+        }
+    }
+
+    public void ruleFour() {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (!universe[i][j] && countLiveNeighbors(i, j) == 3 ) {
                     nextState[i][j] = true;
                 }
             }
@@ -194,7 +205,7 @@ public class GameOfLife {
         return other instanceof GameOfLife;
     }
 
-    public GameOfLife getTrasitionalState() {
+    public GameOfLife getTransitionalState() {
         return new GameOfLife(nextState, height, width);
     }
 
@@ -202,6 +213,6 @@ public class GameOfLife {
         GameOfLife gol = new GameOfLife("testUniverse");
         gol.print();
         gol.advance();
-        gol.getTrasitionalState().print();
+        gol.print();
     }
 }
