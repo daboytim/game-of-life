@@ -111,6 +111,18 @@ public class GameOfLife {
         }
     }
 
+    public void ruleThree() {
+        int numNeighbors;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                numNeighbors = countLiveNeighbors(i, j);
+                if (universe[i][j] && ( numNeighbors == 2 || numNeighbors == 3 ) ) {
+                    nextState[i][j] = true;
+                }
+            }
+        }
+    }
+
     public int countLiveNeighbors(int y, int x) {
         int liveNeighbors = 0;
         if (y == 0 && x == 0) {
