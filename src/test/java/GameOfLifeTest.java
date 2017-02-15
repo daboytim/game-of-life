@@ -8,21 +8,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * Created by derek on 2/14/17.
  */
 public class GameOfLifeTest {
+    private int height = 6, width = 8;
     private GameOfLife underTest;
 
     @Before
     public void setup() {
-        underTest = new GameOfLife("testUniverse");
-    }
-
-    @Test
-    public void shouldInitializeUniverse() throws Exception {
-        assertThat(underTest.isReady(), equalTo(true));
+        underTest = new GameOfLife(height, width, "testUniverse");
     }
 
     @Test
     public void shouldInitializeUniverseFromFile() throws Exception {
-        underTest = new GameOfLife("packedUniverse");
+        underTest = new GameOfLife(height, width, "packedUniverse");
         for (int i = 0; i < underTest.height(); i++){
             for (int j = 0; j < underTest.width(); j++) {
                 assertThat(underTest.get(i, j), equalTo(true));
@@ -51,30 +47,30 @@ public class GameOfLifeTest {
     @Test
     public void shouldAdvanceUsingRuleOne() throws Exception {
         underTest.ruleOne();
-        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife("testUniverse.1")));
+        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife(height, width, "testUniverse.1")));
     }
 
     @Test
     public void shouldAdvanceUsingRuleTwo() throws Exception {
         underTest.ruleTwo();
-        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife("testUniverse.2")));
+        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife(height, width, "testUniverse.2")));
     }
 
     @Test
     public void shouldAdvanceUsingRuleThree() throws Exception {
         underTest.ruleThree();
-        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife("testUniverse.3")));
+        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife(height, width, "testUniverse.3")));
     }
 
     @Test
     public void shouldAdvanceUsingRuleFour() throws Exception {
         underTest.ruleFour();
-        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife("testUniverse.4")));
+        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife(height, width, "testUniverse.4")));
     }
 
     @Test
     public void shouldAdvanceUsingAllRules() throws Exception {
         underTest.advance();
-        assertThat(underTest, equalTo(new GameOfLife("testUniverseNextState")));
+        assertThat(underTest, equalTo(new GameOfLife(height, width, "testUniverseNextState")));
     }
 }

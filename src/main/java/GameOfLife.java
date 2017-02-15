@@ -1,13 +1,9 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * Created by derek on 2/14/17.
  */
 public class GameOfLife {
-    private boolean ready;
     private boolean[][] universe, nextState;
     private int width, height;
     private String delim;
@@ -16,7 +12,6 @@ public class GameOfLife {
         this.universe = state;
         this.height = height;
         this.width = width;
-        ready = true;
     }
 
     public GameOfLife(int height, int width, String file) {
@@ -26,7 +21,7 @@ public class GameOfLife {
         universe = new boolean[height][width];
         nextState = new boolean[height][width];
         try {
-            ready = init(file);
+            init(file);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
@@ -40,15 +35,21 @@ public class GameOfLife {
         universe = new boolean[height][width];
         nextState = new boolean[height][width];
         try {
-            ready = init(file);
+            init(file);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
     }
 
-    private boolean init(String file) throws IOException {
+    private void init(String file) throws IOException {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(file);
+        if (stream == null) {
+            stream = new FileInputStream(file);
+        }
+        if (stream == null) {
+            throw new FileNotFoundException(String.format("File not found; %s", file));
+        }
         BufferedReader buffer = new BufferedReader(new InputStreamReader(stream));
         String currentLine;
         String[] states;
@@ -69,12 +70,6 @@ public class GameOfLife {
         if (numLines != height) {
             throw new IllegalArgumentException(String.format("Expected universe height of %d; got %d", height, numLines));
         }
-
-        return true;
-    }
-
-    public boolean isReady() {
-        return ready;
     }
 
     public int width() {
@@ -210,7 +205,6 @@ public class GameOfLife {
         if (!(o instanceof GameOfLife)) return false;
         final GameOfLife other = (GameOfLife) o;
         if (!other.canEqual((Object) this)) return false;
-        if (this.isReady() != other.isReady()) return false;
         if (!java.util.Arrays.deepEquals(this.universe, other.universe)) return false;
         if (this.width != other.width) return false;
         if (this.height != other.height) return false;
@@ -225,13 +219,15 @@ public class GameOfLife {
         return new GameOfLife(nextState, height, width);
     }
 
-    public static void main(String[] args) {
-        if (args.length <= 3 || args.length > 4) {
+    public static void main(String[] args) throws FileNotFoundException {
+        if (args.length < 3 || args.length > 4) {
             usage();
+            System.exit(1);
         }
         int height = Integer.parseInt(args[0]);
         int width = Integer.parseInt(args[1]);
         String file = args[2];
+        checkFile(file);
         String delim = null;
         if (args.length > 3) {
             delim = args[3];
@@ -257,6 +253,15 @@ public class GameOfLife {
         System.exit(0);
     }
 
+    public static void checkFile(String file) throws FileNotFoundException {
+        if (ClassLoader.getSystemClassLoader().getResourceAsStream(file) == null) {
+            File f = new File(file);
+            if (!(f.exists() && f.isFile())) {
+                throw new FileNotFoundException(file);
+            }
+        }
+    }
+
     public static boolean ask() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         System.out.print("Continue advancing the state?[Y/n] ");
@@ -278,7 +283,7 @@ public class GameOfLife {
         System.out.println("usage: <height> <width> <file> [delimiter]");
         System.out.println("    height    - the number of rows in your universe");
         System.out.println("    width     - the number of columns in your universe");
-        System.out.println("    file      - the initial state of your universe");
+        System.out.println("    file      - a file containing the initial state of your universe");
         System.out.println("    delimiter - an optional pattern which separates cells in the universe (default: ',')");
     }
 }
