@@ -1,21 +1,68 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 /**
  * Created by derek on 2/14/17.
  */
 public class GameOfLife {
     private boolean ready;
     private boolean[][] universe;
+    private int width, height;
 
-    public GameOfLife() {
-        ready = init();
+    public GameOfLife(String file) {
+        width = 8;
+        height = 6;
+        universe = new boolean[height][width];
+        try {
+            ready = init(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
-    private boolean init() {
-        universe = new boolean[8][6];
+    private boolean init(String file) throws IOException {
+        InputStream stream = ClassLoader.getSystemResourceAsStream(file);
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(stream));
+        String currentLine;
+        String[] states;
+        int numLines = 0;
+        while ((currentLine = buffer.readLine()) != null) {
+            if (numLines > height) {
+                break;
+            }
+            states = currentLine.split(",");
+            if (states.length != width) {
+                throw new IllegalArgumentException("Expected universe width of 8; got " + states.length);
+            }
+            for (int i = 0; i < width; i++) {
+                universe[numLines][i] = !states[i].equals("0");
+            }
+            numLines++;
+        }
+        if (numLines != height) {
+            throw new IllegalArgumentException("Expected universe height of 6; got " + numLines);
+        }
+
         return true;
     }
 
     public boolean isReady() {
         return ready;
+    }
+
+    public int width() {
+        return width;
+    }
+
+    public int height() {
+        return height;
+    }
+
+    public boolean get(int x, int y) {
+        return universe[x][y];
     }
 
     public static void main(String[] args) {
