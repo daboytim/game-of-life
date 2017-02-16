@@ -12,9 +12,13 @@ public class GameOfLife {
         this.universe = state;
         this.height = height;
         this.width = width;
+        nextState = new boolean[height][width];
     }
 
     public GameOfLife(int height, int width, String file) {
+        if (height < 2 || width < 2) {
+            throw new IllegalArgumentException("Both height and width must be >= 2");
+        }
         this.height = height;
         this.width = width;
         delim = ",";
@@ -24,11 +28,14 @@ public class GameOfLife {
             init(file);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
     public GameOfLife(int height, int width, String file, String delim) {
+        if (height < 2 || width < 2) {
+            throw new IllegalArgumentException("Both height and width must be >= 2");
+        }
         this.height = height;
         this.width = width;
         this.delim = delim;
@@ -46,9 +53,6 @@ public class GameOfLife {
         InputStream stream = getClass().getClassLoader().getResourceAsStream(file);
         if (stream == null) {
             stream = new FileInputStream(file);
-        }
-        if (stream == null) {
-            throw new FileNotFoundException(String.format("File not found; %s", file));
         }
         BufferedReader buffer = new BufferedReader(new InputStreamReader(stream));
         String currentLine;
@@ -95,53 +99,41 @@ public class GameOfLife {
     }
 
     public void advance() {
-        ruleOne();
-        ruleTwo();
-        ruleThree();
-        ruleFour();
+        int liveNeighbors;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                liveNeighbors = countLiveNeighbors(i, j);
+                ruleOne(i, j, liveNeighbors);
+                ruleTwo(i, j, liveNeighbors);
+                ruleThree(i, j, liveNeighbors);
+                ruleFour(i, j, liveNeighbors);
+            }
+        }
         universe = nextState;
         nextState = new boolean[height][width];
     }
 
-    public void ruleOne() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (universe[i][j] && countLiveNeighbors(i, j) < 2) {
-                    nextState[i][j] = false;
-                }
-            }
+    private void ruleOne(int y, int x, int n) {
+        if (universe[y][x] && n < 2) {
+            nextState[y][x] = false;
         }
     }
 
-    public void ruleTwo() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (universe[i][j] && countLiveNeighbors(i, j) > 3) {
-                    nextState[i][j] = false;
-                }
-            }
+    private void ruleTwo(int y, int x, int n) {
+        if (universe[y][x] && n > 3) {
+            nextState[y][x] = false;
         }
     }
 
-    public void ruleThree() {
-        int numNeighbors;
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                numNeighbors = countLiveNeighbors(i, j);
-                if (universe[i][j] && ( numNeighbors == 2 || numNeighbors == 3 ) ) {
-                    nextState[i][j] = true;
-                }
-            }
+    private void ruleThree(int y, int x, int n) {
+        if (universe[y][x] && ( n == 2 || n == 3 ) ) {
+            nextState[y][x] = true;
         }
     }
 
-    public void ruleFour() {
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                if (!universe[i][j] && countLiveNeighbors(i, j) == 3 ) {
-                    nextState[i][j] = true;
-                }
-            }
+    private void ruleFour(int y, int x, int n) {
+        if (!universe[y][x] && n == 3 ) {
+            nextState[y][x] = true;
         }
     }
 
@@ -233,21 +225,21 @@ public class GameOfLife {
             delim = args[3];
         }
 
-        GameOfLife gameOfLifel;
+        GameOfLife gameOfLife;
         if (delim == null) {
-            gameOfLifel = new GameOfLife(height, width, file);
+            gameOfLife = new GameOfLife(height, width, file);
         } else {
-            gameOfLifel = new GameOfLife(height, width, file, delim);
+            gameOfLife = new GameOfLife(height, width, file, delim);
         }
 
         System.out.println("Universe initialized:");
-        gameOfLifel.print();
+        gameOfLife.print();
 
         do {
             System.out.print("Advancing to next state...");
-            gameOfLifel.advance();
+            gameOfLife.advance();
             System.out.println("done");
-            gameOfLifel.print();
+            gameOfLife.print();
         } while (ask());
 
         System.exit(0);

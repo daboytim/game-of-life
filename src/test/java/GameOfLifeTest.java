@@ -27,6 +27,26 @@ public class GameOfLifeTest {
     }
 
     @Test
+    public void shouldInitializeUniverseUsingCustomDelim() throws Exception {
+        underTest = new GameOfLife(height, width, "customDelim", " ");
+        for (int i = 0; i < underTest.height(); i++){
+            for (int j = 0; j < underTest.width(); j++) {
+                assertThat(underTest.get(i, j), equalTo(true));
+            }
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWithNonExistentFile() throws Exception {
+        new GameOfLife(height, width, "notARealFile");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowExceptionWithSmallUniverse() throws Exception {
+        new GameOfLife(1, -3, "packedUniverse");
+    }
+
+    @Test
     public void shouldCountLiveNeighbors() throws Exception {
         int y = underTest.height()-1;
         int x = underTest.width()-1;
@@ -42,30 +62,6 @@ public class GameOfLifeTest {
         assertThat(underTest.countLiveNeighbors(y/2, x), equalTo(2));
         //middle of universe
         assertThat(underTest.countLiveNeighbors(y/2, x/2), equalTo(1));
-    }
-
-    @Test
-    public void shouldAdvanceUsingRuleOne() throws Exception {
-        underTest.ruleOne();
-        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife(height, width, "testUniverse.1")));
-    }
-
-    @Test
-    public void shouldAdvanceUsingRuleTwo() throws Exception {
-        underTest.ruleTwo();
-        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife(height, width, "testUniverse.2")));
-    }
-
-    @Test
-    public void shouldAdvanceUsingRuleThree() throws Exception {
-        underTest.ruleThree();
-        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife(height, width, "testUniverse.3")));
-    }
-
-    @Test
-    public void shouldAdvanceUsingRuleFour() throws Exception {
-        underTest.ruleFour();
-        assertThat(underTest.getTransitionalState(), equalTo(new GameOfLife(height, width, "testUniverse.4")));
     }
 
     @Test
